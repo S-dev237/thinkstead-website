@@ -265,6 +265,7 @@ export function RequestDialog({
   onClose: () => void;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  const nameRef = useRef<HTMLInputElement>(null);
   const id = useId();
   const [system, setSystem] = useState<Os>("Windows");
   const [name, setName] = useState("");
@@ -280,6 +281,8 @@ export function RequestDialog({
       setSystem(os);
       setOpened(false);
       dialog.showModal();
+      // showModal focuses the first control (the close button); the form starts with the name.
+      nameRef.current?.focus();
     }
     if (!os && dialog.open) dialog.close();
   }, [os]);
@@ -319,7 +322,7 @@ export function RequestDialog({
           <form className="request-form" onSubmit={(event) => event.preventDefault()}>
             <label className="field">
               <span>{t.dl.name}</span>
-              <input type="text" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" autoFocus />
+              <input ref={nameRef} type="text" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
             </label>
             <label className="field">
               <span>
