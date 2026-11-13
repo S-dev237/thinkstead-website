@@ -36,7 +36,11 @@ npm ci
 npm run dev        # http://localhost:5173
 npm run build      # type-check, then build into dist/
 npm run preview    # serve dist/
+npm run deploy     # build and publish to GitHub Pages (pushes dist/ to the gh-pages branch)
 ```
+
+GitHub Pages serves the `gh-pages` branch. Every push to `main` also publishes it automatically through
+`.github/workflows/deploy.yml`, whenever GitHub Actions is available on the account.
 
 ## Where things live
 
@@ -48,7 +52,8 @@ npm run preview    # serve dist/
 | `src/data/downloads.ts`      | Reads the release feed (`latest.yml`, `latest-linux.yml`, `latest-mac.yml`) |
 | `src/components/`            | Nav, demo, download section and dialog, tabs, clips                         |
 | `public/media/`              | Product clips (`.mp4` + `.webp` poster) and full-size stills in `shots/`     |
-| `.github/workflows/deploy.yml` | Builds and publishes to GitHub Pages on every push to `main`              |
+| `.github/workflows/deploy.yml` | Builds and publishes to the `gh-pages` branch on every push to `main`     |
+| `scripts/deploy-gh-pages.sh` | The same publishing step, run by hand (`npm run deploy`)                    |
 
 ## Publishing a new version of the app
 

@@ -258,8 +258,8 @@ export const copy: Record<Locale, Copy> = {
     },
     film: {
       kicker: "The film", title: "Thinkstead in one minute.",
-      copy: "Instructions, agents, scheduled tasks, Workspaces and sharing, in the real app.",
-      play: "Play the film", close: "Close the film", note: "With English subtitles.",
+      copy: "Instructions, agents, scheduled tasks, Workspaces, sharing and Auto Respond, in the real app.",
+      play: "Play the film", close: "Close the film", note: "Narrated in English, with English and French captions.",
     },
     get: {
       kicker: "Download",
@@ -498,8 +498,8 @@ export const copy: Record<Locale, Copy> = {
     },
     film: {
       kicker: "Le film", title: "Thinkstead en une minute.",
-      copy: "Consignes, agents, tâches planifiées, Workspaces et partage, dans la vraie application.",
-      play: "Lire le film", close: "Fermer le film", note: "En anglais, sous-titré.",
+      copy: "Consignes, agents, tâches planifiées, Workspaces, partage et réponse auto, dans la vraie application.",
+      play: "Lire le film", close: "Fermer le film", note: "Narration en anglais, sous-titres en français.",
     },
     get: {
       kicker: "Téléchargement",

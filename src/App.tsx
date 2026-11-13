@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
+  ArrowRight,
   CalendarClock,
   Check,
   Code,
@@ -31,7 +32,13 @@ import { SiteNav } from "./components/Nav";
 import { UseCases } from "./components/UseCases";
 
 /** The film ships in /media once rendered; until then its section and button stay out. */
-const FILM = { available: false, src: `${MEDIA}/thinkstead-film-en.mp4`, poster: `${MEDIA}/film-poster.jpg`, vtt: `${MEDIA}/thinkstead-film-en.vtt`, length: "1:00" };
+const FILM = {
+  available: true,
+  src: `${MEDIA}/thinkstead-film-en.mp4`,
+  poster: `${MEDIA}/film-poster.jpg`,
+  captions: { en: `${MEDIA}/thinkstead-film-en.vtt`, fr: `${MEDIA}/thinkstead-film-fr.vtt` },
+  length: "1:02",
+};
 
 const AGENTS = ["Claude Code", "Codex", "Gemini CLI", "Copilot", "Cursor", "Kimi", "Amp", "Auggie"];
 const CAP_ICONS: Record<string, typeof FileText> = {
@@ -124,7 +131,8 @@ function FilmDialog({ open, onClose, t, locale }: { open: boolean; onClose: () =
         <X size={20} aria-hidden="true" />
       </button>
       <video ref={video} src={FILM.src} poster={FILM.poster} controls playsInline preload="none">
-        <track kind="subtitles" src={FILM.vtt} srcLang="en" label="English" default={locale === "en"} />
+        <track kind="captions" src={FILM.captions.en} srcLang="en" label="English" default={locale === "en"} />
+        <track kind="subtitles" src={FILM.captions.fr} srcLang="fr" label="Français" default={locale === "fr"} />
       </video>
     </dialog>
   );
@@ -190,6 +198,14 @@ export default function App() {
                   </a>
                 )}
               </DownloadCta>
+              {FILM.available && (
+                <p className="hero-try">
+                  <a href="#demo">
+                    {t.hero.demo}
+                    <ArrowRight size={15} aria-hidden="true" />
+                  </a>
+                </p>
+              )}
               <p className="hero-note">
                 <ShieldCheck size={15} aria-hidden="true" />
                 {t.hero.note}
@@ -390,7 +406,7 @@ export default function App() {
                 <p className="kicker">{t.film.kicker}</p>
                 <h2 id="film-title">{t.film.title}</h2>
                 <p className="lede">{t.film.copy}</p>
-                {locale === "fr" && <p className="film-note">{t.film.note}</p>}
+                <p className="film-note">{t.film.note}</p>
               </div>
             </div>
           </section>
