@@ -32,10 +32,14 @@ type Copy = {
   hero: { badge: string; badgeFallback: string; title: [string, string, string]; copy: string; demo: string; film: string; note: string; cardFile: string; cardFileMeta: string; cardTask: string; cardTaskMeta: string; windowLabel: string };
   dl: {
     for: string; soon: string; checking: string; version: string; others: string; size: string;
-    notYet: string; started: string; startedFor: string; close: string; next: string;
+    notYet: string; close: string; next: string;
     verify: string; verifyHint: string; copy: string; copied: string; requirements: string; released: string;
     otherOs: string;
     notYetHint: string;
+    how: string; howSteps: string[];
+    reqTitle: string; reqLead: string; name: string; org: string; use: string; system: string; optional: string;
+    send: string; sendHint: string; noMail: string; copyAddress: string; copyMessage: string;
+    subject: string; body: string; sentNote: string;
   };
   platforms: Record<Os, { label: string; req: string; steps: string[] }>;
   agents: { title: string; more: string; models: string };
@@ -81,7 +85,7 @@ export const copy: Record<Locale, Copy> = {
         "Thinkstead is the desktop workspace where AI agents carry out what you describe: files, research, schedules and replies. And they stop to ask you before anything that matters.",
       demo: "Try it in your browser",
       film: "Watch the film",
-      note: "Free download · Windows 10+ and Debian/Ubuntu · macOS soon",
+      note: "Free · Downloads on request · Windows 10+ and Debian/Ubuntu · macOS soon",
       cardFile: "Q3-review.pptx",
       cardFileMeta: "6 slides · ready for review",
       cardTask: "Morning brief",
@@ -89,14 +93,28 @@ export const copy: Record<Locale, Copy> = {
       windowLabel: "Thinkstead, home screen: an instruction typed in, ready to send",
     },
     dl: {
-      for: "Download for", soon: "coming soon", checking: "Finding the latest version…", version: "Version",
+      for: "Request access for", soon: "coming soon", checking: "Finding the latest version…", version: "Version",
       others: "Also for", size: "{s}", notYet: "Not available yet",
-      started: "Your download has started", startedFor: "Thinkstead {v} for {os}",
-      close: "Close", next: "Next steps",
+      close: "Close", next: "Once you have the file",
       verify: "Check the file (optional)", verifyHint: "Compare this SHA-512 with the output of the command below.",
       copy: "Copy", copied: "Copied", requirements: "Requirements", released: "Released {d}",
       otherOs: "Other systems",
       notYetHint: "The installer for this system is being published. It will appear here on its own, nothing to refresh later.",
+      how: "How to get it",
+      howSteps: [
+        "Send us a short request by email, to tdexsolution@gmail.com.",
+        "We review it and reply to you.",
+        "You receive a personal download link, valid for 7 days.",
+      ],
+      reqTitle: "Request access to Thinkstead",
+      reqLead: "Thinkstead is free, and each download is approved by our team. Tell us who you are: once your request is approved, we reply with your personal download link, valid for 7 days.",
+      name: "Your name", org: "Organisation", use: "What will you use it for?", system: "System", optional: "optional",
+      send: "Write the email", sendHint: "Your email app opens with the message ready to send to tdexsolution@gmail.com.",
+      noMail: "No email app on this device? Copy the address and the message, and send them from your webmail.",
+      copyAddress: "Copy address", copyMessage: "Copy message",
+      subject: "Thinkstead access request ({os})",
+      body: "Hello,\n\nI would like to download Thinkstead for {os}.\n\nName: {name}\nOrganisation: {org}\nWhat I will use it for: {use}\n\nThank you.",
+      sentNote: "Your link will arrive at the address you write from. No answer after two working days? Write to us again.",
     },
     platforms: {
       Windows: {
@@ -264,7 +282,7 @@ export const copy: Record<Locale, Copy> = {
     get: {
       kicker: "Download",
       title: "Get Thinkstead.",
-      lead: "One installer, about a minute. Your data stays on your computer.",
+      lead: "Thinkstead is free. Downloads are given on request: send us a short email, and we reply with your personal download link.",
       pick: "Choose your system",
     },
     faq: {
@@ -273,27 +291,28 @@ export const copy: Record<Locale, Copy> = {
       lead: "Still wondering about something? These are the questions people ask first.",
       items: [
         { q: "What is Thinkstead, exactly?", a: "A desktop app for Windows and Linux where AI agents do work for you: they write real Office files, research the web, run tasks on a schedule, plan projects with your team and answer messages. You describe the outcome; they carry it out and show every step." },
-        { q: "Is it free?", a: "Downloading and installing Thinkstead is free. To send messages you sign in to a Thinkstead account; model usage runs on credits you top up in the app, with MTN or Orange Mobile Money. Agents you connect yourself, like Claude Code or Codex, keep using your own subscription with them." },
+        { q: "How do I get Thinkstead?", a: "Press Request access and send the email it prepares to tdexsolution@gmail.com. Once your request is approved, we reply with a personal download link, valid for 7 days. If it expires before you use it, reply to that email and we send a new one." },
+        { q: "Is it free?", a: "Yes. The app is free; downloads are simply approved one by one. To send messages you sign in to a Thinkstead account; model usage runs on credits you top up in the app, with MTN or Orange Mobile Money. Agents you connect yourself, like Claude Code or Codex, keep using your own subscription with them." },
         { q: "Do I need an API key?", a: "No. Sign in and the built-in agent works straight away. If you prefer, you can add your own provider keys on the Model page." },
         { q: "Which agents and models does it work with?", a: "Thinkstead has its own built-in agent and supports 41 agents, including Claude Code, Codex, Gemini CLI, Copilot, Cursor and Kimi, detected as soon as they're installed. Models from OpenAI, Anthropic, Google, Mistral, OpenRouter, AWS Bedrock, Qwen and local models through Ollama can be configured." },
         { q: "Will it do things without asking me?", a: "Only if you let it. Each conversation has a permission mode: Default asks before changing anything, Auto Edit may edit files on its own, YOLO runs freely. Auto Respond agents can be set to wait for your approval on every tool call." },
         { q: "Where is my data stored?", a: "On your computer. Conversations, workspaces and settings live in Thinkstead's data folder (~/.config/Thinkstead on Linux, %APPDATA%\\Thinkstead on Windows). Your documents stay where they are on your disk." },
-        { q: "Windows warns me about the installer. Is that normal?", a: "Windows SmartScreen shows a warning for apps it hasn't seen many times yet. Choose More info, then Run anyway. You can check the file first: the download panel shows its SHA-512 checksum." },
+        { q: "Windows warns me about the installer. Is that normal?", a: "Windows SmartScreen shows a warning for apps it hasn't seen many times yet. Choose More info, then Run anyway. You can check the file first: the Download section of this page shows its SHA-512 checksum." },
         { q: "Can I use it with my team?", a: "Yes. Share a workspace on your local network: colleagues join with a six-digit PIN from Thinkstead or from a browser, and keep a read-only copy when you stop sharing." },
         { q: "Is there a Mac version?", a: "It's on its way. In the meantime, Thinkstead runs on Windows 10 and 11, and on Debian, Ubuntu and their derivatives." },
-        { q: "How do I update?", a: "Download the new version from this page and install it over the old one. Your conversations, workspaces and settings are kept." },
+        { q: "How do I update?", a: "Ask for the new version the same way, then install it over the old one. Your conversations, workspaces and settings are kept." },
         { q: "Is the demo on this page the real app?", a: "No, it's a simulation that runs in your browser, to show how an instruction becomes a plan, an approval and a result. The clips and screenshots on this page are the real app." },
       ],
     },
     closer: {
       title: "Less talking about work. More work getting done.",
-      copy: "Install Thinkstead in a minute. Your agents handle the rest.",
-      note: "Windows and Linux today, macOS soon.",
+      copy: "Ask for your access today. Your agents handle the rest.",
+      note: "Free · Downloads on request · Windows and Linux today, macOS soon.",
     },
     footer: {
       tagline: "The desktop workspace where AI agents do the work.",
       product: "Product",
-      releases: "All downloads",
+      releases: "Request access",
       credit: "Built on the open-source AionUi project (Apache-2.0).",
       rights: "All rights reserved.",
       top: "Back to top",
@@ -321,7 +340,7 @@ export const copy: Record<Locale, Copy> = {
         "Thinkstead est l'espace de travail de bureau où des agents IA exécutent ce que vous décrivez : fichiers, recherches, plannings et réponses. Et ils vous demandent avant tout ce qui compte.",
       demo: "Essayer dans le navigateur",
       film: "Voir le film",
-      note: "Téléchargement gratuit · Windows 10+ et Debian/Ubuntu · macOS bientôt",
+      note: "Gratuit · Téléchargement sur demande · Windows 10+ et Debian/Ubuntu · macOS bientôt",
       cardFile: "Bilan-T3.pptx",
       cardFileMeta: "6 diapositives · prêt à relire",
       cardTask: "Brief du matin",
@@ -329,14 +348,28 @@ export const copy: Record<Locale, Copy> = {
       windowLabel: "Thinkstead, écran d'accueil : une consigne saisie, prête à être envoyée",
     },
     dl: {
-      for: "Télécharger pour", soon: "bientôt", checking: "Recherche de la dernière version…", version: "Version",
+      for: "Demander l'accès pour", soon: "bientôt", checking: "Recherche de la dernière version…", version: "Version",
       others: "Aussi pour", size: "{s}", notYet: "Pas encore disponible",
-      started: "Votre téléchargement a commencé", startedFor: "Thinkstead {v} pour {os}",
-      close: "Fermer", next: "Étapes suivantes",
+      close: "Fermer", next: "Une fois le fichier reçu",
       verify: "Vérifier le fichier (facultatif)", verifyHint: "Comparez ce SHA-512 avec le résultat de la commande ci-dessous.",
       copy: "Copier", copied: "Copié", requirements: "Configuration", released: "Publiée le {d}",
       otherOs: "Autres systèmes",
       notYetHint: "L'installateur de ce système est en cours de publication. Il apparaîtra ici tout seul.",
+      how: "Comment l'obtenir",
+      howSteps: [
+        "Envoyez-nous une courte demande par e-mail, à tdexsolution@gmail.com.",
+        "Nous l'examinons et vous répondons.",
+        "Vous recevez un lien de téléchargement personnel, valable 7 jours.",
+      ],
+      reqTitle: "Demander l'accès à Thinkstead",
+      reqLead: "Thinkstead est gratuit, et chaque téléchargement est validé par notre équipe. Dites-nous qui vous êtes : une fois votre demande acceptée, nous vous répondons avec votre lien de téléchargement personnel, valable 7 jours.",
+      name: "Votre nom", org: "Organisation", use: "Pour quoi allez-vous l'utiliser ?", system: "Système", optional: "facultatif",
+      send: "Rédiger l'e-mail", sendHint: "Votre messagerie s'ouvre avec le message prêt à envoyer à tdexsolution@gmail.com.",
+      noMail: "Pas de messagerie sur cet appareil ? Copiez l'adresse et le message, et envoyez-les depuis votre webmail.",
+      copyAddress: "Copier l'adresse", copyMessage: "Copier le message",
+      subject: "Demande d'accès à Thinkstead ({os})",
+      body: "Bonjour,\n\nJe souhaite télécharger Thinkstead pour {os}.\n\nNom : {name}\nOrganisation : {org}\nUtilisation prévue : {use}\n\nMerci.",
+      sentNote: "Votre lien arrivera à l'adresse depuis laquelle vous écrivez. Pas de réponse sous deux jours ouvrés ? Écrivez-nous de nouveau.",
     },
     platforms: {
       Windows: {
@@ -504,7 +537,7 @@ export const copy: Record<Locale, Copy> = {
     get: {
       kicker: "Téléchargement",
       title: "Installez Thinkstead.",
-      lead: "Un installateur, environ une minute. Vos données restent sur votre ordinateur.",
+      lead: "Thinkstead est gratuit. Le téléchargement se fait sur demande : envoyez-nous un court e-mail, nous vous répondons avec votre lien personnel.",
       pick: "Choisissez votre système",
     },
     faq: {
@@ -513,27 +546,28 @@ export const copy: Record<Locale, Copy> = {
       lead: "Une hésitation ? Voici les questions qu'on nous pose en premier.",
       items: [
         { q: "Qu'est-ce que Thinkstead, exactement ?", a: "Une application de bureau pour Windows et Linux où des agents IA travaillent pour vous : ils écrivent de vrais fichiers Office, font des recherches sur le web, exécutent des tâches planifiées, organisent des projets avec votre équipe et répondent aux messages. Vous décrivez le résultat ; ils l'exécutent et montrent chaque étape." },
-        { q: "Est-ce gratuit ?", a: "Le téléchargement et l'installation sont gratuits. Pour envoyer des messages, vous vous connectez à un compte Thinkstead ; l'usage des modèles se paie en crédits, rechargés dans l'application par MTN ou Orange Mobile Money. Les agents que vous connectez vous-même, comme Claude Code ou Codex, continuent d'utiliser votre abonnement chez eux." },
+        { q: "Comment obtenir Thinkstead ?", a: "Appuyez sur Demander l'accès et envoyez l'e-mail préparé à tdexsolution@gmail.com. Une fois votre demande acceptée, nous vous répondons avec un lien de téléchargement personnel, valable 7 jours. S'il expire avant que vous l'utilisiez, répondez à cet e-mail et nous en envoyons un nouveau." },
+        { q: "Est-ce gratuit ?", a: "Oui. L'application est gratuite ; les téléchargements sont simplement validés un par un. Pour envoyer des messages, vous vous connectez à un compte Thinkstead ; l'usage des modèles se paie en crédits, rechargés dans l'application par MTN ou Orange Mobile Money. Les agents que vous connectez vous-même, comme Claude Code ou Codex, continuent d'utiliser votre abonnement chez eux." },
         { q: "Faut-il une clé d'API ?", a: "Non. Connectez-vous et l'agent intégré fonctionne tout de suite. Si vous préférez, ajoutez vos propres clés sur la page Modèle." },
         { q: "Avec quels agents et modèles fonctionne-t-il ?", a: "Thinkstead a son propre agent intégré et prend en charge 41 agents, dont Claude Code, Codex, Gemini CLI, Copilot, Cursor et Kimi, détectés dès leur installation. Les modèles d'OpenAI, Anthropic, Google, Mistral, OpenRouter, AWS Bedrock, Qwen et des modèles locaux via Ollama peuvent être configurés." },
         { q: "Va-t-il agir sans me demander ?", a: "Seulement si vous le permettez. Chaque conversation a un mode d'autorisation : Default demande avant toute modification, Auto Edit peut modifier les fichiers seul, YOLO agit librement. Les agents de Réponse auto peuvent attendre votre accord à chaque appel d'outil." },
         { q: "Où sont stockées mes données ?", a: "Sur votre ordinateur. Conversations, workspaces et réglages sont dans le dossier de données de Thinkstead (~/.config/Thinkstead sous Linux, %APPDATA%\\Thinkstead sous Windows). Vos documents restent où ils sont." },
-        { q: "Windows m'avertit à propos de l'installateur. Est-ce normal ?", a: "Windows SmartScreen avertit pour les applications qu'il n'a pas encore souvent vues. Choisissez Informations complémentaires, puis Exécuter quand même. Vous pouvez vérifier le fichier avant : le panneau de téléchargement affiche son empreinte SHA-512." },
+        { q: "Windows m'avertit à propos de l'installateur. Est-ce normal ?", a: "Windows SmartScreen avertit pour les applications qu'il n'a pas encore souvent vues. Choisissez Informations complémentaires, puis Exécuter quand même. Vous pouvez vérifier le fichier avant : la section Téléchargement de cette page affiche son empreinte SHA-512." },
         { q: "Puis-je l'utiliser en équipe ?", a: "Oui. Partagez un workspace sur votre réseau local : vos collègues rejoignent avec un code à six chiffres depuis Thinkstead ou un navigateur, et gardent une copie en lecture seule à la fin du partage." },
         { q: "Existe-t-il une version Mac ?", a: "Elle arrive. En attendant, Thinkstead fonctionne sur Windows 10 et 11, et sur Debian, Ubuntu et leurs dérivées." },
-        { q: "Comment mettre à jour ?", a: "Téléchargez la nouvelle version sur cette page et installez-la par-dessus l'ancienne. Vos conversations, workspaces et réglages sont conservés." },
+        { q: "Comment mettre à jour ?", a: "Demandez la nouvelle version de la même façon, puis installez-la par-dessus l'ancienne. Vos conversations, workspaces et réglages sont conservés." },
         { q: "La démo de cette page est-elle la vraie application ?", a: "Non, c'est une simulation dans votre navigateur, pour montrer comment une consigne devient un plan, une validation et un résultat. Les extraits vidéo et captures de cette page, eux, sont la vraie application." },
       ],
     },
     closer: {
       title: "Moins parler du travail. Plus de travail fait.",
-      copy: "Installez Thinkstead en une minute. Vos agents s'occupent du reste.",
-      note: "Windows et Linux aujourd'hui, macOS bientôt.",
+      copy: "Demandez votre accès dès aujourd'hui. Vos agents s'occupent du reste.",
+      note: "Gratuit · Téléchargement sur demande · Windows et Linux aujourd'hui, macOS bientôt.",
     },
     footer: {
       tagline: "L'espace de travail de bureau où les agents IA font le travail.",
       product: "Produit",
-      releases: "Tous les téléchargements",
+      releases: "Demander l'accès",
       credit: "Construit sur le projet open source AionUi (Apache-2.0).",
       rights: "Tous droits réservés.",
       top: "Haut de page",

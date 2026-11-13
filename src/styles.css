@@ -1522,6 +1522,115 @@ main:focus {
   color: var(--muted);
 }
 
+/* ── Access request ───────────────────────────────────────────────────────── */
+.link-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 700;
+  color: var(--ink-2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.link-button:hover {
+  color: var(--accent-ink);
+}
+.how-title {
+  font-size: 17px;
+  margin: 28px 0 12px;
+}
+.how-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: how;
+  display: grid;
+  gap: 10px;
+}
+.how-steps li {
+  counter-increment: how;
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  gap: 10px;
+  align-items: start;
+  color: var(--ink-2);
+}
+.how-steps li::before {
+  content: counter(how);
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  font-weight: 800;
+  font-size: 14px;
+}
+.sheet-lead {
+  color: var(--muted);
+  margin: -8px 0 20px;
+}
+.request-form {
+  display: grid;
+  gap: 14px;
+}
+.field {
+  display: grid;
+  gap: 6px;
+  font-weight: 700;
+  font-size: 14.5px;
+}
+.field-optional {
+  font-weight: 500;
+  color: var(--muted);
+}
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border-radius: 11px;
+  border: 1px solid var(--line-strong);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 400;
+}
+.field textarea {
+  resize: vertical;
+}
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+.request-send {
+  margin-top: 6px;
+  width: 100%;
+}
+.request-hint {
+  font-size: 14px;
+  color: var(--muted);
+}
+.request-fallback {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+  color: var(--muted);
+}
+.request-copy {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
 /* ── FAQ ──────────────────────────────────────────────────────────────────── */
 .faq-layout {
   display: grid;

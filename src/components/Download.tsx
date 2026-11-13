@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Apple, ArrowRight, Check, Copy, Download, Monitor, Terminal, X } from "lucide-react";
+import { useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { Apple, ArrowRight, Check, Copy, Mail, Monitor, Terminal, X } from "lucide-react";
 import type { copy, Locale, Os } from "../data/content";
-import { checksumCommand, detectOs, formatBytes, formatDate, RELEASES_INDEX, type Release } from "../data/downloads";
+import { ACCESS_EMAIL, checksumCommand, detectOs, formatBytes, formatDate, type Release } from "../data/downloads";
 import { useCopy } from "../hooks";
 import { Tabs } from "./Tabs";
 
@@ -27,19 +27,22 @@ function metaLine(t: T, locale: Locale, os: Os, release: Release | null | undefi
   return parts.join(" · ");
 }
 
-/** Hero call to action: one button for the system you are on, the others right underneath. */
+/**
+ * Hero call to action: one "Request access" button for the system you are on,
+ * the others right underneath. Downloads are approved by email, so the button
+ * opens the request form rather than a file.
+ */
 export function DownloadCta({
   t,
   locale,
   releases,
-  onStart,
+  onRequest,
   children,
 }: {
   t: T;
   locale: Locale;
   releases: ReleaseState;
-  onStart: (os: Os) => void;
-  /** A secondary action shown beside the download button. */
+  onRequest: (os: Os) => void;
   children?: ReactNode;
 }) {
   const [primaryOs, setPrimaryOs] = useState<Os>("Windows");
@@ -53,41 +56,52 @@ export function DownloadCta({
   return (
     <div className="download-cta">
       <div className="download-row">
-        <a
-          className={`button button-primary button-large${unavailable ? " is-unavailable" : ""}`}
-          href={release?.url ?? "#download"}
-          onClick={() => release && onStart(primary.os)}
-          aria-describedby="hero-download-meta"
-        >
-          <Icon size={18} aria-hidden="true" />
-          {unavailable ? `${t.platforms[primary.os].label} · ${t.dl.soon}` : `${t.dl.for} ${t.platforms[primary.os].label}`}
-          {unavailable ? <ArrowRight size={16} aria-hidden="true" /> : <Download size={16} aria-hidden="true" />}
-        </a>
+        {unavailable ? (
+          <a className="button button-primary button-large is-unavailable" href="#download" aria-describedby="hero-download-meta">
+            <Icon size={18} aria-hidden="true" />
+            {t.platforms[primary.os].label} · {t.dl.soon}
+            <ArrowRight size={16} aria-hidden="true" />
+          </a>
+        ) : (
+          <button
+            className="button button-primary button-large"
+            type="button"
+            onClick={() => onRequest(primary.os)}
+            aria-haspopup="dialog"
+            aria-describedby="hero-download-meta"
+          >
+            <Icon size={18} aria-hidden="true" />
+            {t.dl.for} {t.platforms[primary.os].label}
+            <Mail size={16} aria-hidden="true" />
+          </button>
+        )}
         {children}
       </div>
       <p className="download-meta" id="hero-download-meta">
         <span aria-live="polite">{metaLine(t, locale, primary.os, release)}</span>
         <span>
           {t.dl.others}{" "}
-          {others.map((p, i) => {
-            const r = releases[p.os];
-            return (
-              <span key={p.os}>
-                <a href={r?.url ?? "#download"} onClick={() => r && onStart(p.os)}>
+          {others.map((p, i) => (
+            <span key={p.os}>
+              {releases[p.os] === null ? (
+                <span>
+                  {t.platforms[p.os].label} ({t.dl.soon})
+                </span>
+              ) : (
+                <button className="link-button" type="button" onClick={() => onRequest(p.os)} aria-haspopup="dialog">
                   {t.platforms[p.os].label}
-                  {r === null && ` (${t.dl.soon})`}
-                </a>
-                {i < others.length - 1 && " · "}
-              </span>
-            );
-          })}
+                </button>
+              )}
+              {i < others.length - 1 && " · "}
+            </span>
+          ))}
         </span>
       </p>
     </div>
   );
 }
 
-/** Steps, checksum and command for one platform: shared by the section and the dialog. */
+/** What to do with the file once the personal link has been used. */
 function InstallDetails({ t, locale, os, release }: { t: T; locale: Locale; os: Os; release: Release | null | undefined }) {
   const [copied, copyText] = useCopy();
   const file = release?.file ?? "";
@@ -160,14 +174,12 @@ export function DownloadSection({
   t,
   locale,
   releases,
-  onStart,
-  children,
+  onRequest,
 }: {
   t: T;
   locale: Locale;
   releases: ReleaseState;
-  onStart: (os: Os) => void;
-  children?: ReactNode;
+  onRequest: (os: Os) => void;
 }) {
   const [os, setOs] = useState<Os>("Windows");
   useEffect(() => setOs(detectOs()), []);
@@ -182,7 +194,12 @@ export function DownloadSection({
           <p className="kicker">{t.get.kicker}</p>
           <h2 id="get-title">{t.get.title}</h2>
           <p className="lede">{t.get.lead}</p>
-          {children}
+          <h3 className="how-title">{t.dl.how}</h3>
+          <ol className="how-steps">
+            {t.dl.howSteps.map((step) => (
+              <li key={step}>{step}</li>
+            ))}
+          </ol>
         </header>
         <div className="get-card" data-reveal>
           <Tabs
@@ -210,31 +227,14 @@ export function DownloadSection({
                   {t.platforms[os].label} · {t.dl.notYet}
                 </p>
                 <p>{os === "Mac" ? t.platforms[os].steps[0] : t.dl.notYetHint}</p>
-                {os !== "Mac" && (
-                  <a className="button button-light button-small" href={RELEASES_INDEX}>
-                    {t.footer.releases}
-                    <ArrowRight size={15} aria-hidden="true" />
-                  </a>
-                )}
               </div>
             ) : (
               <>
-                <a
-                  className="button button-primary button-large os-button"
-                  href={release?.url ?? RELEASES_INDEX}
-                  onClick={(event) => {
-                    if (!release) {
-                      event.preventDefault(); // Still resolving: nothing to download yet.
-                      return;
-                    }
-                    onStart(os);
-                  }}
-                  aria-disabled={release === undefined ? "true" : undefined}
-                >
+                <button className="button button-primary button-large os-button" type="button" onClick={() => onRequest(os)} aria-haspopup="dialog">
                   <Icon size={18} aria-hidden="true" />
                   {t.dl.for} {t.platforms[os].label}
-                  <Download size={16} aria-hidden="true" />
-                </a>
+                  <Mail size={16} aria-hidden="true" />
+                </button>
                 <p className="download-meta" aria-live="polite">
                   {metaLine(t, locale, os, release)}
                 </p>
@@ -248,34 +248,55 @@ export function DownloadSection({
   );
 }
 
-/** Shown as the download starts: what to do with the file, without leaving the page. */
-export function NextStepsDialog({
+/**
+ * The access request: a short form that prepares the email. The message is
+ * written for the visitor, sent from their own mailbox (so the reply with the
+ * personal link reaches them), and can be copied when no mail app is set up.
+ */
+export function RequestDialog({
   t,
-  locale,
   os,
   releases,
   onClose,
 }: {
   t: T;
-  locale: Locale;
   os: Os | null;
   releases: ReleaseState;
   onClose: () => void;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  const id = useId();
+  const [system, setSystem] = useState<Os>("Windows");
+  const [name, setName] = useState("");
+  const [org, setOrg] = useState("");
+  const [use, setUse] = useState("");
+  const [opened, setOpened] = useState(false);
+  const [copied, copyText] = useCopy();
+
   useEffect(() => {
     const dialog = ref.current;
     if (!dialog) return;
-    if (os && !dialog.open) dialog.showModal();
+    if (os && !dialog.open) {
+      setSystem(os);
+      setOpened(false);
+      dialog.showModal();
+    }
     if (!os && dialog.open) dialog.close();
   }, [os]);
-  const release = os ? releases[os] : undefined;
+
+  const available = PLATFORMS.filter((p) => releases[p.os] !== null);
+  const label = t.platforms[system].label;
+  const subject = fill(t.dl.subject, { os: label });
+  const body = fill(t.dl.body, { os: label, name: name.trim() || "—", org: org.trim() || "—", use: use.trim() || "—" });
+  const mailto = `mailto:${ACCESS_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  const optional = <span className="field-optional">({t.dl.optional})</span>;
 
   return (
     <dialog
       ref={ref}
       className="sheet"
-      aria-labelledby="next-title"
+      aria-labelledby={`${id}-title`}
+      aria-describedby={`${id}-lead`}
       onClose={onClose}
       onClick={(event) => {
         if (event.target === ref.current) ref.current?.close();
@@ -287,11 +308,67 @@ export function NextStepsDialog({
             <X size={18} aria-hidden="true" />
           </button>
           <p className="sheet-kicker">
-            <Check size={16} aria-hidden="true" />
-            {t.dl.started}
+            <Mail size={16} aria-hidden="true" />
+            {ACCESS_EMAIL}
           </p>
-          <h2 id="next-title">{fill(t.dl.startedFor, { v: release?.version ?? "", os: t.platforms[os].label })}</h2>
-          <InstallDetails t={t} locale={locale} os={os} release={release} />
+          <h2 id={`${id}-title`}>{t.dl.reqTitle}</h2>
+          <p className="sheet-lead" id={`${id}-lead`}>
+            {t.dl.reqLead}
+          </p>
+
+          <form className="request-form" onSubmit={(event) => event.preventDefault()}>
+            <label className="field">
+              <span>{t.dl.name}</span>
+              <input type="text" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" autoFocus />
+            </label>
+            <label className="field">
+              <span>
+                {t.dl.org} {optional}
+              </span>
+              <input type="text" value={org} onChange={(e) => setOrg(e.target.value)} autoComplete="organization" />
+            </label>
+            <label className="field">
+              <span>{t.dl.system}</span>
+              <select value={system} onChange={(e) => setSystem(e.target.value as Os)}>
+                {available.map((p) => (
+                  <option key={p.os} value={p.os}>
+                    {t.platforms[p.os].label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="field">
+              <span>
+                {t.dl.use} {optional}
+              </span>
+              <textarea value={use} onChange={(e) => setUse(e.target.value)} rows={3} />
+            </label>
+
+            <a className="button button-primary button-large request-send" href={mailto} onClick={() => setOpened(true)}>
+              <Mail size={17} aria-hidden="true" />
+              {t.dl.send}
+            </a>
+            <p className="request-hint" aria-live="polite">
+              {opened ? t.dl.sentNote : t.dl.sendHint}
+            </p>
+          </form>
+
+          <div className="request-fallback">
+            <p>{t.dl.noMail}</p>
+            <div className="request-copy">
+              <button type="button" className="copy-button" onClick={() => copyText("address", ACCESS_EMAIL)}>
+                {copied === "address" ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
+                {copied === "address" ? t.dl.copied : t.dl.copyAddress}
+              </button>
+              <button type="button" className="copy-button" onClick={() => copyText("message", `${subject}\n\n${body}`)}>
+                {copied === "message" ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
+                {copied === "message" ? t.dl.copied : t.dl.copyMessage}
+              </button>
+            </div>
+          </div>
+          <p className="visually-hidden" role="status" aria-live="polite">
+            {copied ? t.dl.copied : ""}
+          </p>
         </div>
       )}
     </dialog>

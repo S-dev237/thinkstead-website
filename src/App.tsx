@@ -22,18 +22,18 @@ import {
 } from "lucide-react";
 import { providerMarks } from "./data/brandMarks";
 import { copy, type Chapter, type Locale, type Os } from "./data/content";
-import { RELEASES_INDEX, resolveRelease } from "./data/downloads";
+import { ACCESS_EMAIL, resolveRelease } from "./data/downloads";
 import { initialLocale, store, useReveal, useTheme } from "./hooks";
 import { Brand, BrandMark } from "./components/Brand";
 import { Clip, MEDIA } from "./components/Clip";
 import { Demo } from "./components/Demo";
-import { DownloadCta, DownloadSection, NextStepsDialog, PLATFORMS, type ReleaseState } from "./components/Download";
+import { DownloadCta, DownloadSection, PLATFORMS, RequestDialog, type ReleaseState } from "./components/Download";
 import { SiteNav } from "./components/Nav";
 import { UseCases } from "./components/UseCases";
 
 /** The film ships in /media once rendered; until then its section and button stay out. */
 const FILM = {
-  available: true,
+  available: false, // re-enabled once the film ending is re-rendered
   src: `${MEDIA}/thinkstead-film-en.mp4`,
   poster: `${MEDIA}/film-poster.jpg`,
   captions: { en: `${MEDIA}/thinkstead-film-en.vtt`, fr: `${MEDIA}/thinkstead-film-fr.vtt` },
@@ -142,7 +142,7 @@ export default function App() {
   const [locale, setLocale] = useState<Locale>(initialLocale);
   const [theme, setTheme] = useTheme();
   const [releases, setReleases] = useState<ReleaseState>({ Windows: undefined, Linux: undefined, Mac: undefined });
-  const [nextOs, setNextOs] = useState<Os | null>(null);
+  const [requestOs, setRequestOs] = useState<Os | null>(null);
   const [shot, setShot] = useState<{ src: string; alt: string } | null>(null);
   const [filmOpen, setFilmOpen] = useState(false);
   const t = copy[locale];
@@ -184,7 +184,7 @@ export default function App() {
                 <span>{title1}</span> <span>{title2}</span> <span className="accent">{title3}</span>
               </h1>
               <p className="hero-lede">{t.hero.copy}</p>
-              <DownloadCta t={t} locale={locale} releases={releases} onStart={setNextOs}>
+              <DownloadCta t={t} locale={locale} releases={releases} onRequest={setRequestOs}>
                 {FILM.available ? (
                   <button className="button button-light button-large" type="button" onClick={() => setFilmOpen(true)}>
                     <Play size={15} aria-hidden="true" />
@@ -412,7 +412,7 @@ export default function App() {
           </section>
         )}
 
-        <DownloadSection t={t} locale={locale} releases={releases} onStart={setNextOs} />
+        <DownloadSection t={t} locale={locale} releases={releases} onRequest={setRequestOs} />
 
         <section className="section faq" id="faq" aria-labelledby="faq-title">
           <div className="container faq-layout">
@@ -439,21 +439,20 @@ export default function App() {
               <h2 id="closer-title">{t.closer.title}</h2>
               <p className="lede">{t.closer.copy}</p>
               <div className="closer-actions">
-                {PLATFORMS.map(({ os, icon: Icon }) => {
-                  const r = releases[os];
-                  return (
-                    <a
-                      key={os}
-                      className={`button ${r === null ? "button-light is-unavailable" : "button-primary"}`}
-                      href={r?.url ?? "#download"}
-                      onClick={() => r && setNextOs(os)}
-                    >
+                {PLATFORMS.map(({ os, icon: Icon }) =>
+                  releases[os] === null ? (
+                    <a key={os} className="button button-light is-unavailable" href="#download">
                       <Icon size={17} aria-hidden="true" />
                       {t.platforms[os].label}
-                      {r === null && <span className="button-meta">{t.dl.soon}</span>}
+                      <span className="button-meta">{t.dl.soon}</span>
                     </a>
-                  );
-                })}
+                  ) : (
+                    <button key={os} className="button button-primary" type="button" onClick={() => setRequestOs(os)} aria-haspopup="dialog">
+                      <Icon size={17} aria-hidden="true" />
+                      {t.dl.for} {t.platforms[os].label}
+                    </button>
+                  ),
+                )}
               </div>
               <p className="closer-note">{t.closer.note}</p>
             </div>
@@ -474,7 +473,7 @@ export default function App() {
             <a href="#demo">{t.nav.demo}</a>
             <a href="#features">{t.nav.features}</a>
             <a href="#faq">{t.nav.faq}</a>
-            <a href={RELEASES_INDEX}>{t.footer.releases}</a>
+            <a href={`mailto:${ACCESS_EMAIL}`}>{t.footer.releases}</a>
             <a href="#top">{t.footer.top}</a>
           </nav>
           <p className="footer-legal">
@@ -483,7 +482,7 @@ export default function App() {
         </div>
       </footer>
 
-      <NextStepsDialog t={t} locale={locale} os={nextOs} releases={releases} onClose={() => setNextOs(null)} />
+      <RequestDialog t={t} os={requestOs} releases={releases} onClose={() => setRequestOs(null)} />
       <Lightbox shot={shot} onClose={() => setShot(null)} closeLabel={t.dl.close} />
       <FilmDialog open={filmOpen} onClose={() => setFilmOpen(false)} t={t} locale={locale} />
     </>

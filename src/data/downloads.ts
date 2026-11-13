@@ -14,9 +14,13 @@
 import type { Os } from "./content";
 
 export const RELEASES_BASE = "https://vps-4b2ef8f0.vps.ovh.ca/thinkstead-releases";
-/** Browsable listing of every published file. */
-export const RELEASES_INDEX = `${RELEASES_BASE}/`;
 
+/**
+ * Downloads are approved one by one: visitors write here, and the team replies
+ * with a personal link that expires (made on the VPS with `sudo thinkstead-link`).
+ * The installers themselves answer 403 without such a link.
+ */
+export const ACCESS_EMAIL = "tdexsolution@gmail.com";
 const CHANNEL_FILE: Record<Os, string> = {
   Windows: "latest.yml",
   Linux: "latest-linux.yml",
