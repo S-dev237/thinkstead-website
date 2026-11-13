@@ -33,7 +33,7 @@ import { UseCases } from "./components/UseCases";
 
 /** The film ships in /media once rendered; until then its section and button stay out. */
 const FILM = {
-  available: false, // re-enabled once the film ending is re-rendered
+  available: true,
   src: `${MEDIA}/thinkstead-film-en.mp4`,
   poster: `${MEDIA}/film-poster.jpg`,
   captions: { en: `${MEDIA}/thinkstead-film-en.vtt`, fr: `${MEDIA}/thinkstead-film-fr.vtt` },
