@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thinkstead · Think it. Assign it. Done.</title>
+    <meta
+      name="description"
+      content="Thinkstead is the desktop workspace where AI agents carry out what you describe: documents, research, schedules and replies. For Windows and Linux."
+    />
+    <link rel="canonical" href="https://s-dev237.github.io/thinkstead-website/" />
+    <meta name="theme-color" content="#f7f7f2" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e131c" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="./favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="manifest" href="./site.webmanifest" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Thinkstead" />
+    <meta property="og:title" content="Thinkstead · Think it. Assign it. Done." />
+    <meta
+      property="og:description"
+      content="The desktop workspace where AI agents do the work you describe, and ask before anything that matters. Free download for Windows and Linux."
+    />
+    <meta property="og:url" content="https://s-dev237.github.io/thinkstead-website/" />
+    <meta property="og:image" content="https://s-dev237.github.io/thinkstead-website/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Thinkstead: Think it. Assign it. Done. Next to the app's workspace roadmap." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://s-dev237.github.io/thinkstead-website/og.jpg" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Thinkstead",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Windows 10, Windows 11, Debian, Ubuntu",
+        "description": "The desktop workspace where AI agents carry out what you describe: documents, research, schedules and replies.",
+        "url": "https://s-dev237.github.io/thinkstead-website/",
+        "image": "https://s-dev237.github.io/thinkstead-website/og.jpg",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+      }
+    </script>
+
+    <!-- The remembered theme is applied before first paint, so a dark-mode visitor never sees a white flash. -->
+    <script>
+      try {
+        var theme = localStorage.getItem("thinkstead.theme");
+        if (theme === "light" || theme === "dark") document.documentElement.setAttribute("data-theme", theme);
+      } catch (e) {}
+    </script>
+
+    <link rel="preload" as="image" href="./media/hero.webp" fetchpriority="high" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400..700&family=Manrope:wght@600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+    />
+    <link rel="preconnect" href="https://vps-4b2ef8f0.vps.ovh.ca" crossorigin />
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <div style="max-width: 640px; margin: 64px auto; padding: 0 16px; font-family: system-ui, sans-serif; line-height: 1.6">
+        <h1>Thinkstead · Think it. Assign it. Done.</h1>
+        <p>
+          The desktop workspace where AI agents carry out what you describe: documents, research, schedules and replies.
+          This page needs JavaScript for its demo and videos; the downloads work without it.
+        </p>
+        <p><a href="https://vps-4b2ef8f0.vps.ovh.ca/thinkstead-releases/">Download Thinkstead for Windows and Linux</a></p>
+      </div>
+    </noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
