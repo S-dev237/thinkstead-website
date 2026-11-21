@@ -20,7 +20,7 @@ export const RELEASES_BASE = "https://vps-4b2ef8f0.vps.ovh.ca/thinkstead-release
  * with a personal link that expires (made on the VPS with `sudo thinkstead-link`).
  * The installers themselves answer 403 without such a link.
  */
-export const ACCESS_EMAIL = "tdexsolution@gmail.com";
+export const ACCESS_EMAIL = "emmanuelayuk60@gmail.com";
 const CHANNEL_FILE: Record<Os, string> = {
   Windows: "latest.yml",
   Linux: "latest-linux.yml",

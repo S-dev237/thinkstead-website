@@ -11,7 +11,7 @@
 
 <p align="center">
   <a href="https://vps-4b2ef8f0.vps.ovh.ca/">Website</a> ·
-  <a href="mailto:tdexsolution@gmail.com?subject=Thinkstead%20access%20request">Request access</a>
+  <a href="mailto:emmanuelayuk60@gmail.com?subject=Thinkstead%20access%20request">Request access</a>
 </p>
 
 ---
@@ -23,7 +23,7 @@
 - **An interactive simulation.** Pick an instruction and watch it become a plan, an approval and a result.
   It runs entirely in the browser and sends nothing anywhere.
 - **Downloads on request.** Thinkstead is free, and each download is approved by the team. The "Request access"
-  buttons open a short form that prepares an email to tdexsolution@gmail.com; once approved, the visitor
+  buttons open a short form that prepares an email to emmanuelayuk60@gmail.com; once approved, the visitor
   receives a personal download link that expires after 7 days. The installers cannot be downloaded without
   such a link.
 - **English and French**, light and dark themes, keyboard and screen-reader friendly, and every moving clip
